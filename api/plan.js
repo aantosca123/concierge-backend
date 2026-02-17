@@ -19,7 +19,20 @@ export default async function handler(req, res) {
 
   const data = await response.json();
 
-  res.status(200).json({
-    result: data.output_text || "No output"
-  });
-}
+// Try common places the Responses API may put generated text:
+const text =
+  data.output_text ||
+  (Array.isArray(data.output) ? data.output.map(o => o?.content?.map(c => c?.text).filter(Boolean).join("")).filter(Boolean).join("\n") : "") ||
+  data?.response?.output_text ||
+  data?.choices?.[0]?.message?.content ||
+  "";
+
+res.status(200).json({
+  result: text.trim() || "No output",
+  debug: {
+    hasOutputText: !!data.output_text,
+    hasOutputArray: Array.isArray(data.output),
+    keys: Object.keys(data || {})
+  }
+});
+

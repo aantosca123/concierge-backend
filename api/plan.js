@@ -28,12 +28,12 @@ const text =
   data?.choices?.[0]?.message?.content ||
   "";
 
-res.status(200).json({
-  result: text.trim() || "No output",
-  debug: {
-    hasOutputText: !!data.output_text,
-    hasOutputArray: Array.isArray(data.output),
-    keys: Object.keys(data || {})
-  }
-});
-
+  res.status(200).json({
+    result: text.trim() || "No output",
+    debug: {
+      hasOutputText: !!data.output_text,
+      hasOutputArray: Array.isArray(data.output),
+      keys: Object.keys(data || {})
+    }
+  });
+};
